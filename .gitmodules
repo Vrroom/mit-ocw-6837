@@ -1,0 +1,6 @@
+[submodule "mit-vecmath"]
+	path = mit-vecmath
+	url = https://github.com/ydm/mit-vecmath.git
+[submodule "zero/mit-vecmath"]
+	path = zero/mit-vecmath
+	url = https://github.com/ydm/mit-vecmath.git
