@@ -53,8 +53,8 @@ bool Candidate::operator < (const Candidate &t) const {
 }
 
 GarlandHeckbert::GarlandHeckbert (Mesh &mesh) : mesh(mesh) {
-  computeQuadrics(); 
-  initializeCandidates(); 
+  _computeQuadrics(); 
+  _initializeCandidates(); 
 }
 
 Vector4f GarlandHeckbert::_faceNormal (int fi) {
@@ -70,7 +70,7 @@ Vector4f GarlandHeckbert::_faceNormal (int fi) {
   return Vector4f(normal.x(), normal.y(), normal.z(), d); 
 }
 
-void GarlandHeckbert::computeQuadrics () {
+void GarlandHeckbert::_computeQuadrics () {
   int n = mesh.vertices.size(); 
   for (int i = 0; i < n; i++) {
     Qs.emplace_back();
@@ -81,7 +81,7 @@ void GarlandHeckbert::computeQuadrics () {
   }
 }
 
-void GarlandHeckbert::initializeCandidates () {
+void GarlandHeckbert::_initializeCandidates () {
   set<pair<int, int> > pairs; 
   for (auto &f: mesh.faces) {
     int csz = f.cornerIds.size();

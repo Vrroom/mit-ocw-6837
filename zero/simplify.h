@@ -25,11 +25,11 @@ struct GarlandHeckbert {
 
   GarlandHeckbert (Mesh &mesh);
 
-  void computeQuadrics(); 
+  void _computeQuadrics(); 
 
   Vector4f _faceNormal(int i); 
 
-  void initializeCandidates(); 
+  void _initializeCandidates(); 
   
   void simplifyStep (); 
 }; 

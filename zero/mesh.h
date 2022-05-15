@@ -24,7 +24,9 @@ struct Mesh {
   vector<Face> faces;
   set<int> invalidFaces, invalidVertices;
 
-  void computeQuadrics(); 
+  bool empty () { 
+    return (faces.size() - invalidFaces.size()) == 0;
+  }
 
   void read(); // read mesh from stdin
 
