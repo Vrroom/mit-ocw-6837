@@ -16,6 +16,10 @@ make
 * Key `c` toggles between preset colors
 * Arrow keys control where light is being shined from
 
+## Example
+
+![torus](https://user-images.githubusercontent.com/7254326/168430168-714d34c2-ed0d-491b-9594-8345a6951469.gif)
+
 ## Timing results
 
 |             | Verices | Time (s) |
