@@ -22,11 +22,11 @@ make
 
 ## Timing results
 
-|             | Verices | Time (s) |
-| ----------- | ------- | -------- |
-| sphere.obj  | 382     | 0.025    |
-| torus.obj   | 800     | 0.054    |
-| garg.obj    | 21278   | 1.642    |
+|             | Vertices | Time (s) |
+| ----------- | -------  | -------- |
+| sphere.obj  | 382      | 0.025    |
+| torus.obj   | 800      | 0.054    |
+| garg.obj    | 21278    | 1.642    |
 
 ## What more can be done
 
