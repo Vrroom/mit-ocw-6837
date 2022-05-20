@@ -1,4 +1,5 @@
 #include "surf.h"
+#include <vector>
 #include "extra.h"
 using namespace std;
 
@@ -19,6 +20,37 @@ namespace
   }
 }
 
+struct IdPair {
+  int i, j, n, m; 
+  IdPair (int i, int j, int n, int m) : i(i % n), j(j % m), n(n), m(m) {}
+  int to1D () { return i * m + j; }
+}; 
+
+void makeFaces (int n, int m, Surface &surface, bool closed=false) {
+  vector<vector<IdPair> > f; 
+  for (int i = 0; i < n; i++) 
+    for (int j = 0; j < m; j++) 
+      if (closed || i + 1 < n) {
+        f.push_back(vector<IdPair>({
+          IdPair(i    , j    , n, m), 
+          IdPair(i + 1, j    , n, m),
+          IdPair(i    , j + 1, n, m)
+        })); 
+        f.push_back(vector<IdPair>({
+          IdPair(i    , j + 1, n, m), 
+          IdPair(i + 1, j    , n, m), 
+          IdPair(i + 1, j + 1, n, m)
+        })); 
+      }
+  for (auto &tup: f) 
+    surface.VF.emplace_back(
+      tup[0].to1D(), 
+      tup[1].to1D(), 
+      tup[2].to1D()
+    ); 
+}
+
+
 Surface makeSurfRev(const Curve &profile, unsigned steps)
 {
   Surface surface;
@@ -28,11 +60,31 @@ Surface makeSurfRev(const Curve &profile, unsigned steps)
     cerr << "surfRev profile curve must be flat on xy plane." << endl;
     exit(0);
   }
-
-  // TODO: Here you should build the surface.  See surf.h for details.
-
-  cerr << "\t>>> makeSurfRev called (but not implemented).\n\t>>> Returning empty surface." << endl;
-
+  Curve profile_ = profile;
+  for (auto &p : profile_) 
+    p.N.negate(); 
+  int n = profile_.size(), m = steps;
+  float theta = 2.f * M_PI / (m + 0.f); 
+  vector<Curve> S; 
+  for (int i = 0; i < m; i++) {
+    S.emplace_back(); 
+    for (auto p : profile_) 
+      S.back().push_back(p); 
+    Matrix3f roty = Matrix3f::rotateY(theta);
+    for (auto &p : profile_) { 
+      p.V = roty * p.V; 
+      p.T = roty * p.T; 
+      p.B = roty * p.B; 
+      p.N = roty * p.N; 
+      p.N.normalize();
+    }
+  }
+ for (int i = 0; i < n; i++) 
+   for (int j = 0; j < m; j++) {
+     surface.VV.push_back(expand(S[j][i].V)); 
+     surface.VN.push_back(expand(S[j][i].N)); 
+   }
+  makeFaces(n, m, surface); 
   return surface;
 }
 
@@ -45,10 +97,27 @@ Surface makeGenCyl(const Curve &profile, const Curve &sweep )
     cerr << "genCyl profile curve must be flat on xy plane." << endl;
     exit(0);
   }
-
-  // TODO: Here you should build the surface.  See surf.h for details.
-
-  cerr << "\t>>> makeGenCyl called (but not implemented).\n\t>>> Returning empty surface." <<endl;
+  
+  Curve profile_ = profile;
+  for (auto &p : profile_) 
+    p.N.negate(); 
+  int n = profile_.size(), m = sweep.size();
+  vector<vector<Vector3f> > VV, VN; 
+  for (auto &sp : sweep) {
+    VV.emplace_back(); 
+    VN.emplace_back(); 
+    Matrix3f B(sp.N, sp.B, sp.T); 
+    for (auto &pp : profile_) { 
+      VV.back().push_back(sp.V + B * pp.V); 
+      VN.back().push_back((B * pp.N).normalized()); 
+    }
+  }
+ for (int i = 0; i < n; i++) 
+   for (int j = 0; j < m; j++) {
+     surface.VV.push_back(expand(VV[j][i])); 
+     surface.VN.push_back(expand(VN[j][i])); 
+   }
+  makeFaces(n, m, surface); 
 
   return surface;
 }

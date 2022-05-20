@@ -6,20 +6,27 @@ LINKFLAGS += -L /usr/lib -lvecmath
 
 CFLAGS    = -O2 -Wall -DSOLN -fPIE
 CC        = g++
-SRCS      = subdiv.cpp parse.cpp curve.cpp surf.cpp camera.cpp mesh.cpp extra.cpp
-OBJS      = $(SRCS:.cpp=.o)
-PROG      = a1
+SRCS1     = main.cpp parse.cpp curve.cpp surf.cpp camera.cpp extra.cpp
+OBJS1     = $(SRCS1:.cpp=.o)
+PROG1     = a1
 
-all: $(SRCS) $(PROG)
+SRCS2     = subdiv.cpp parse.cpp curve.cpp surf.cpp camera.cpp mesh.cpp extra.cpp
+OBJS2     = $(SRCS2:.cpp=.o)
+PROG2     = subdiv
 
-$(PROG): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LINKFLAGS)
+all: $(SRCS1) $(PROG1) $(SRCS2) $(PROG2)
+
+$(PROG1): $(OBJS1)
+	$(CC) $(CFLAGS) $(OBJS1) -o $@ $(LINKFLAGS)
+
+$(PROG2): $(OBJS2)
+	$(CC) $(CFLAGS) $(OBJS2) -o $@ $(LINKFLAGS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -c -o $@ $(INCFLAGS)
 
 depend:
-	makedepend $(INCFLAGS) -Y $(SRCS)
+	makedepend $(INCFLAGS) -Y $(SRCS1) $(SRCS2)
 
 clean:
-	rm $(OBJS) $(PROG)
+	rm $(OBJS1) $(PROG1) $(OBJS2) $(PROG2)
