@@ -20,4 +20,5 @@ Subdivision surface obtained by applying Loop Subdivision on an Icosahedron
 ![output](https://user-images.githubusercontent.com/7254326/169796053-1cf898e3-f933-45c9-993c-7392059f6af5.gif)
 
 ## What more can be done
-* afasfasf
+
+* Use the half-edge data-structure to implement Loop Subdivision.  
